@@ -223,7 +223,7 @@ menu:
 			while (1)
 			{
 				system("cls");
-				std::cout << "Pong v0.1a by Michal Krysztofik" << std::endl << std::endl;
+				std::cout << "Pong v0.1a by Michal K" << std::endl << std::endl;
 				std::cout << "Opcje" << std::endl;
 				std::cout << "[1] Kolor tla: " << plansza.getKolorTla() << std::endl;
 				std::cout << "[2] Kolor planszy: " << plansza.getKolor() << std::endl;
