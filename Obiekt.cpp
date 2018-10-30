@@ -1,116 +1,112 @@
 #include "Obiekt.h"
 
-
-
-Obiekt::Obiekt(float kolor_r, float kolor_g, float kolor_b)
+Object::Object(float colorR, float colorG, float colorB)
 {
-	this->kolor_r = kolor_r;
-	this->kolor_g = kolor_g;
-	this->kolor_b = kolor_b;
+	this -> colorR = colorR;
+	this -> colorG = colorG;
+	this -> colorB = colorB;
 }
 
-std::string Obiekt::getKolor()
+std::string Object::getColor()
 {
-	if ((kolor_r < 1 && kolor_r > 0) || (kolor_g < 1 && kolor_g > 0) || (kolor_b < 1 && kolor_b > 0))
-		return "nieznany";
+	if ((colorR < 1 && colorR > 0) || (colorG < 1 && colorG > 0) || (colorB < 1 && colorB > 0))
+		return "unknow";
 
-	if (kolor_r == 1)
+	if (colorR == 1)
 	{
-		if (kolor_g == 1)
+		if (colorG == 1)
 		{
-			if (kolor_b == 1)
-				return "bialy";
-			else return "zolty";
+			if (colorB == 1)
+				return "white";
+			else return "yellow";
 		}
 		else
 		{
-			if (kolor_b == 1)
-				return "fioletowy";
-			else return "czerwony";
+			if (colorB == 1)
+				return "violet";
+			else return "red";
 		}
 	}
 	else
-		if (kolor_g == 1)
+		if (colorG == 1)
 		{
-			if (kolor_b == 1)
-				return "blekitny";
-			else return "zielony";
+			if (colorB == 1)
+				return "azure";
+			else return "green";
 		}
 		else
-			if (kolor_b == 1)
-				return "niebieski";
-			else return "czarny";
+			if (colorB == 1)
+				return "blue";
+			else return "black";
 }
 
-void Obiekt::nastKolor()
+void Object::nextColor()
 {
-	//nieznany, czarny, czerwony, zielony, niebieski, bialy, fioletowy, blekitny, zolty
-	if (getKolor() == "nieznany")
+	//unknow, black, red, green, blue, white, violet, azure, yellow
+	if (getColor() == "unknow")
 	{
-		kolor_r = 0;
-		kolor_g = 0;
-		kolor_b = 0;
+		colorR = 0;
+		colorG = 0;
+		colorB = 0;
 		return;
 	}
 
-	if (getKolor() == "czarny")
+	if (getColor() == "black")
 	{
-		kolor_r = 1;
-		kolor_g = 0;
-		kolor_b = 0;
+		colorR = 1;
+		colorG = 0;
+		colorB = 0;
 		return;
 	}
-	if (getKolor() == "czerwony")
+	if (getColor() == "red")
 	{
-		kolor_r = 0;
-		kolor_g = 1;
-		kolor_b = 0;
+		colorR = 0;
+		colorG = 1;
+		colorB = 0;
 		return;
 	}
-	if (getKolor() == "zielony")
+	if (getColor() == "green")
 	{
-		kolor_r = 0;
-		kolor_g = 0;
-		kolor_b = 1;
+		colorR = 0;
+		colorG = 0;
+		colorB = 1;
 		return;
 	}
-	if (getKolor() == "niebieski")
+	if (getColor() == "blue")
 	{
-		kolor_r = 1;
-		kolor_g = 1;
-		kolor_b = 1;
+		colorR = 1;
+		colorG = 1;
+		colorB = 1;
 		return;
 	}
-	if (getKolor() == "bialy")
+	if (getColor() == "white")
 	{
-		kolor_r = 1;
-		kolor_g = 0;
-		kolor_b = 1;
+		colorR = 1;
+		colorG = 0;
+		colorB = 1;
 		return;
 	}
-	if (getKolor() == "fioletowy")
+	if (getColor() == "violet")
 	{
-		kolor_r = 0;
-		kolor_g = 1;
-		kolor_b = 1;
+		colorR = 0;
+		colorG = 1;
+		colorB = 1;
 		return;
 	}
-	if (getKolor() == "blekitny")
+	if (getColor() == "azure")
 	{
-		kolor_r = 1;
-		kolor_g = 1;
-		kolor_b = 0;
+		colorR = 1;
+		colorG = 1;
+		colorB = 0;
 		return;
 	}
-	if (getKolor() == "zolty")
+	if (getColor() == "yellow")
 	{
-		kolor_r = 0;
-		kolor_g = 0;
-		kolor_b = 0;
+		colorR = 0;
+		colorG = 0;
+		colorB = 0;
 		return;
 	}
 }
 
-Obiekt::~Obiekt()
-{
-}
+Object::~Object(){}

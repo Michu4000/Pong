@@ -2,24 +2,23 @@
 #include "Obiekt.h"
 #include <string>
 
-class Plansza : public Obiekt
+class Board : public Object
 {
 private:
-	float szerokosc;
-	float wysokosc;
-	float KolorTla_R;
-	float KolorTla_G;
-	float KolorTla_B;
+	float width;
+	float height;
+	float backgroundColorR;
+	float backgroundColorG;
+	float backgroundColorB;
 public:
-	Plansza(float szerokosc, float wysokosc, float kolor_r, float kolor_g, float kolor_b, float KolorTla_R, float KolorTla_G, float KolorTla_B);
-	float getSzerokosc();
-	float getWysokosc();
-	float getKolorTla_R();
-	float getKolorTla_G();
-	float getKolorTla_B();
-	std::string getKolorTla();
-	void nastKolorTla();
-	void Rysuj();
-	~Plansza();
+	Board(float width, float height, float colorR, float colorG, float colorB, float backgroundColorR, float backgroundColorG, float backgroundColorB);
+	float getWidth();
+	float getHeight();
+	float getBackgroundColorR();
+	float getBackgroundColorG();
+	float getBackgroundColorB();
+	std::string getBackgroundColor();
+	void nextBackgroundColor();
+	void paint();
+	~Board();
 };
-

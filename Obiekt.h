@@ -1,16 +1,15 @@
 #pragma once
 #include <string>
 
-class Obiekt
+class Object
 {
 protected:
-	float kolor_r;
-	float kolor_g;
-	float kolor_b;
+	float colorR;
+	float colorG;
+	float colorB;
 public:
-	Obiekt(float kolor_r, float kolor_g, float kolor_b);
-	std::string getKolor();
-	void nastKolor();
-	~Obiekt();
+	Object(float colorR, float colorG, float colorB);
+	std::string getColor();
+	void nextColor();
+	~Object();
 };
-

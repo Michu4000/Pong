@@ -4,164 +4,161 @@
 
 #define PI 3.141593
 
-Pilka::Pilka(float wielkosc, float szybkosc, float kolor_r, float kolor_g, float kolor_b, float polozenie_x, float polozenie_y, Plansza *plansza) : Obiekt(kolor_r, kolor_g, kolor_b)
+Ball::Ball(float size, float speed, float colorR, float colorG, float colorB, float positionX, float positionY) : Object(colorR, colorG, colorB)
 {
-	this->wielkosc = wielkosc;
-	this->szybkosc = szybkosc;
-	this->polozenie_x = polozenie_x;
-	this->polozenie_y = polozenie_y;
-	this->plansza = plansza;
-	this->wruchu = false;
+	this -> size = size;
+	this -> speed = speed;
+	this -> positionX = positionX;
+	this -> positionY = positionY;
+	this -> isMoving = false;
 }
 
-void Pilka::Rysuj()
+void Ball::paint()
 {
-	glColor3f(kolor_r, kolor_g, kolor_b);
+	glColor3f(colorR, colorG, colorB);
 	glPushMatrix();
-	glTranslatef(polozenie_x, polozenie_y, 0);
-	glutSolidSphere(wielkosc, 10, 10);
+	glTranslatef(positionX, positionY, 0);
+	glutSolidSphere(size, 10, 10);
 	glPopMatrix();
 }
 
-std::string Pilka::getWielkosc()
+std::string Ball::getSizeName()
 {
-	if (wielkosc == 0.25)
-		return "mala";
+	if (size == 0.25)
+		return "small";
 
-	if (wielkosc == 0.5)
-		return "normalna";
+	if (size == 0.5)
+		return "normal";
 
-	if (wielkosc == 1)
-		return "duza";
+	if (size == 1)
+		return "big";
 
-	return "nieznana";
+	return "unknow";
 }
 
-void Pilka::nastWielkosc()
+void Ball::nextSize()
 {
-	if (wielkosc == 0.25)
+	if (size == 0.25)
 	{
-		wielkosc = 0.5;
+		size = 0.5;
 		return;
 	}
 
-	if (wielkosc == 0.5)
+	if (size == 0.5)
 	{
-		wielkosc = 1;
+		size = 1;
 		return;
 	}
 
-	if (wielkosc == 1)
+	if (size == 1)
 	{
-		wielkosc = 0.25;
+		size = 0.25;
 		return;
 	}
 
-	wielkosc = 0.5;
+	size = 0.5;
 }
 
-float Pilka::getPolozenie_x()
+float Ball::getPositionX()
 {
-	return polozenie_x;
+	return positionX;
 }
 
-float Pilka::getPolozenie_y()
+float Ball::getPositionY()
 {
-	return polozenie_y;
+	return positionY;
 }
 
-float Pilka::getRozmiar()
+float Ball::getSize()
 {
-	return wielkosc;
+	return size;
 }
 
-void Pilka::ustawPilke(int gracz)
+void Ball::placeBall(int player)
 {
-	wruchu = false;
-	polozenie_x = 0;
+	isMoving = false;
+	positionX = 0;
 
-	if (gracz == 1)
+	if (player == 1)
 	{
-		polozenie_y = -14 + wielkosc;
-		zmienKat(0);
+		positionY = -14 + size;
+		setAngle(0);
 	}
 
-	if (gracz == 2)
+	if (player == 2)
 	{
-		polozenie_y = 14 - wielkosc;
-		zmienKat(PI/2);
+		positionY = 14 - size;
+		setAngle(PI/2);
 	}
 }
 
-void Pilka::ustawPilke(float x, float y)
+void Ball::placeBall(float x, float y)
 {
-	polozenie_x = x;
-	polozenie_y = y;
+	positionX = x;
+	positionY = y;
 }
 
-void Pilka::Ruch(int gracz)
+void Ball::setMoving()
 {
-	wruchu = true;
+	isMoving = true;
 }
 
-float Pilka::getSzybkosc()
+float Ball::getSpeed()
 {
-	return szybkosc;
+	return speed;
 }
 
-float Pilka::getKat()
+float Ball::getAngle()
 {
-	return kat;
+	return angle;
 }
 
-void Pilka::zmienSzybkosc(float szybkosc)
+void Ball::setSpeed(float speed)
 {
-	this->szybkosc = szybkosc;
+	this -> speed = speed;
 }
 
-void Pilka::zmienKat(float kat)
+void Ball::setAngle(float angle)
 {
-	this->kat = kat;
+	this -> angle = angle;
 }
 
-bool Pilka::getWruchu()
+bool Ball::getMoving()
 {
-	return wruchu;
+	return isMoving;
 }
 
-void Pilka::nastPredkosc()
+void Ball::nextSpeed()
 {
-	if(szybkosc == 4)
+	if(speed == 4)
 	{
-		szybkosc = 8;
+		speed = 8;
 		return;
 	}
 	
-	if (szybkosc == 8)
+	if (speed == 8)
 	{
-		szybkosc = 20;
+		speed = 20;
 		return;
 	}
-	if (szybkosc == 20)
+	if (speed == 20)
 	{
-		szybkosc = 4;
+		speed = 4;
 		return;
 	}
 
-	szybkosc = 4;
+	speed = 4;
 }
 
-std::string Pilka::getPredkosc()
+std::string Ball::getSpeedName()
 {
-	if (szybkosc == 4)
-		return "wolna";
-	if (szybkosc == 8)
-		return "normalna";
-	if (szybkosc == 20)
-		return "szybka";
-	return "nieznana";
+	if (speed == 4)
+		return "slow";
+	if (speed == 8)
+		return "normal";
+	if (speed == 20)
+		return "fast";
+	return "unknow";
 }
 
-Pilka::~Pilka()
-{
-}
+Ball::~Ball(){}

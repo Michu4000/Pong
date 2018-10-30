@@ -2,104 +2,101 @@
 #include <glut.h>
 #include "Plansza.h"
 
-Paletka::Paletka(int gracz, float szerokosc, float polozenie_x, float polozenie_y, float kolor_r, float kolor_g, float kolor_b, Plansza *plansza, Pilka *pilka) : Obiekt(kolor_r, kolor_g, kolor_b)
+Racket::Racket(int player, float width, float positionX, float positionY, float colorR, float colorG, float colorB, Board *board, Ball *ball) : Object(colorR, colorG, colorB)
 {
-	this->szerokosc = szerokosc;
-	this->polozenie_x = polozenie_x;
-	this->polozenie_y = polozenie_y;
-	this->plansza = plansza;
-	this->pilka = pilka;
-	this->gracz = gracz;
+	this -> width = width;
+	this -> positionX = positionX;
+	this -> positionY = positionY;
+	this -> board = board;
+	this -> ball = ball;
+	this -> player = player;
 }
 
-
-void Paletka::Rysuj()
+void Racket::paint()
 {
-	glColor3f(kolor_r, kolor_g, kolor_b);
+	glColor3f(colorR, colorG, colorB);
 	glBegin(GL_QUADS);
-		glVertex3f(polozenie_x-szerokosc/2, polozenie_y, 0.0);
-		glVertex3f(polozenie_x+szerokosc/2, polozenie_y, 0.0);
-		glVertex3f(polozenie_x+szerokosc/2, polozenie_y-1, 0.0);
-		glVertex3f(polozenie_x -szerokosc/2, polozenie_y-1, 0.0);
+		glVertex3f(positionX - width/2, positionY, 0.0);
+		glVertex3f(positionX + width/2, positionY, 0.0);
+		glVertex3f(positionX + width/2, positionY-1, 0.0);
+		glVertex3f(positionX - width/2, positionY-1, 0.0);
 	glEnd();
 }
 
-void Paletka::Ruch_L()
+void Racket::moveLeft()
 {
-	if( polozenie_x-szerokosc/2-1 > -plansza->getSzerokosc()/2 )
-	this->polozenie_x = polozenie_x - 1;
+	if( positionX - width/2 - 1 > -board -> getWidth()/2 )
+	this -> positionX = positionX - 1;
 }
 
-void Paletka::Ruch_P()
+void Racket::moveRight()
 {
-	if ( polozenie_x+szerokosc/2+1 < plansza->getSzerokosc()/2 )
-	this->polozenie_x = polozenie_x + 1;
+	if ( positionX + width/2 + 1 < board -> getWidth()/2 )
+	this->positionX = positionX + 1;
 }
 
-std::string Paletka::getSzerokosc()
+std::string Racket::getWidth()
 {
-	if (szerokosc == 3)
-		return "mala";
+	if (width == 3)
+		return "small";
 
-	if (szerokosc == 7)
-		return "normalna";
+	if (width == 7)
+		return "normal";
 
-	if (szerokosc == 10)
-		return "duza";
+	if (width == 10)
+		return "big";
 
-	return "nieznana";
+	return "unknow";
 }
 
-void Paletka::nastSzerokosc()
+void Racket::nextWidth()
 {
-	if (szerokosc == 3)
+	if (width == 3)
 	{
-		szerokosc = 7;
+		width = 7;
 		return;
 	}
 
-	if (szerokosc == 7)
+	if (width == 7)
 	{
-		szerokosc = 10;
+		width = 10;
 		return;
 	}
 
-	if (szerokosc == 10)
+	if (width == 10)
 	{
-		szerokosc = 3;
+		width = 3;
 		return;
 	}
 
-	szerokosc = 7;
+	width = 7;
 }
 
-void Paletka::Start()
+void Racket::start()
 {
-	if ( PosiadaniePilki() )
-		pilka->Ruch(gracz);
+	if (isHoldingBall())
+		ball -> setMoving();
 }
 
-bool Paletka::PosiadaniePilki()
+bool Racket::isHoldingBall()
 {
-	if (pilka->getPolozenie_x() - pilka->getRozmiar() > polozenie_x + szerokosc / 2)
+	if (ball -> getPositionX() - ball -> getSize() > positionX + width / 2)
 		return false;
-	if (pilka->getPolozenie_x() + pilka->getRozmiar() < polozenie_x - szerokosc / 2)
+	if (ball -> getPositionX() + ball -> getSize() < positionX - width / 2)
 		return false;
 
-	if (gracz==1)
-		if (pilka->getPolozenie_y() - pilka->getRozmiar() <= polozenie_y)//dla paletki1
+	if (player == 1)
+		if (ball -> getPositionY() - ball -> getSize() <= positionY) //for racket 1
 			return true;
-	if(gracz==2)
-		if (pilka->getPolozenie_y() + pilka->getRozmiar() >= polozenie_y-1)//dla paletki2
+	if (player == 2)
+		if (ball -> getPositionY() + ball -> getSize() >= positionY-1) //for racket 2
 			return true;
 	return false;
 }
 
-float Paletka::getPolozenie_x()
+float Racket::getPositionX()
 {
-	return polozenie_x;
+	return positionX;
 }
 
-Paletka::~Paletka()
-{
-}
+Racket::~Racket(){}

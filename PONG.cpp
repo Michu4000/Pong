@@ -10,196 +10,195 @@
 
 #define PI 3.141593
 
-Kamera kamera(-40, 0, 0, -45);
-Plansza plansza(20, 30, 1, 1, 1, 0, 0, 0);
-Pilka pilka(0.5, 4, 1, 0, 0, 0, 0, &plansza);
-Paletka paletka1(1, 7, 0, -14, 0, 0, 1, &plansza, &pilka);
-Paletka paletka2(2, 7, 0, 15, 0, 1, 0, &plansza, &pilka);
+Camera camera(-40.0f, 0.0f, 0.0f, -45.0f);
+Board board(20.0f, 30.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f, 0.0f);
+Ball ball(0.5f, 4.0f, 1.0f, 0.0f, 0.0f, 0.0f, 0.0f);
+Racket racket1(1, 7.0f, 0.0f, -14.0f, 0.0f, 0.0f, 1.0f, &board, &ball);
+Racket racket2(2, 7.0f, 0.0f, 15.0f, 0.0f, 1.0f, 0.0f, &board, &ball);
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Funkcja rysujaca obraz sceny widzianej z biezacej pozycji obserwatora
-void Rysuj()
+// Paint scene's picture from current perspective of observer
+void paint()
 {
-	plansza.Rysuj();
-	pilka.Rysuj();
-	paletka1.Rysuj();
-	paletka2.Rysuj();
+	board.paint();
+	ball.paint();
+	racket1.paint();
+	racket2.paint();
 }
 
-void Kolizja()
+void collision()
 {
-	if( pilka.getWruchu() )
+	if( ball.getMoving() )
 	{
-		if( paletka1.PosiadaniePilki())//odbicie od paletki1
-			pilka.zmienKat(pilka.getKat() + PI - PI * 0.05 * paletka1.getPolozenie_x() );
+		if( racket1.isHoldingBall()) //ball hit racket 1
+			ball.setAngle(ball.getAngle() + PI - PI * 0.05f * racket1.getPositionX() );
 
-		if (paletka2.PosiadaniePilki())//odbicie od paletki2
-			pilka.zmienKat(pilka.getKat() + PI + PI * 0.05 * paletka2.getPolozenie_x() );
+		if (racket2.isHoldingBall()) //ball hit racket 2
+			ball.setAngle(ball.getAngle() + PI + PI * 0.05f * racket2.getPositionX() );
 
-		if(pilka.getPolozenie_y() + pilka.getRozmiar()+0.99 > plansza.getWysokosc() / 2)//pilka wylatuje do gory
-			pilka.ustawPilke(1);
+		if(ball.getPositionY() + ball.getSize() + 0.99f > board.getHeight() / 2) //ball is flying out (top)
+			ball.placeBall(1);
 
-		if(pilka.getPolozenie_y() - pilka.getRozmiar()-0.99 < -plansza.getWysokosc() / 2)//pilka wylatuje do dolu
-			pilka.ustawPilke(2);
+		if(ball.getPositionY() - ball.getSize() - 0.99f < -board.getHeight() / 2) //ball is flying out (bottom)
+			ball.placeBall(2);
 
-		if (pilka.getPolozenie_x() - pilka.getRozmiar() < -plansza.getSzerokosc() / 2)//odbicie od lewej sciany
-			pilka.zmienKat(pilka.getKat() + PI/2);
+		if (ball.getPositionX() - ball.getSize() < -board.getWidth() / 2) //ball hit left wall of board
+			ball.setAngle(ball.getAngle() + PI/2);
 
-		if (pilka.getPolozenie_x() + pilka.getRozmiar() > plansza.getSzerokosc() / 2)//odbicie od prawej sciany
-			pilka.zmienKat(pilka.getKat() - PI/2);
+		if (ball.getPositionX() + ball.getSize() > board.getWidth() / 2) //ball hit right wall of board
+			ball.setAngle(ball.getAngle() - PI/2);
 	}
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Funkcja generujaca pojedyncza klatke animacji
-void WyswietlObraz(void)
+// Generate single animation's frame
+void showPicture(void)
 {
-	// Wyczyszczenie bufora ramki i bufora glebokosci
+	// Clear frame's buffer and depth buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Powielenie macierzy na wierzcholku stosu 
+	// Duplicate the matrix at the top of the stack
 	glPushMatrix();
 
-	// Wyznaczenie polozenia obserwatora (przeksztalcenie uladu wspolrzednych 
-	// sceny do ukladu wspolrzednych obserwatora). 
-	glTranslatef( 0, 0, kamera.getzoom() );
-	glRotatef(kamera.getX(), 1, 0, 0);
-	glRotatef(kamera.getY(), 0, 1, 0);
-	glRotatef(kamera.getZ(), 0, 0, 1);
+	// Get observer's position
+	// (conversion of scene's coordinate system to observer's coordinate system)
+	glTranslatef( 0.0f, 0.0f, camera.getZoom() );
+	glRotatef(camera.getX(), 1.0f, 0.0f, 0.0f);
+	glRotatef(camera.getY(), 0.0f, 1.0f, 0.0f);
+	glRotatef(camera.getZ(), 0.0f, 0.0f, 1.0f);
 
-	// Generacja obrazu sceny w niewidocznym buforze ramki
-	Rysuj();
+	// Generate scene's picture in invisible frame's buffer
+	paint();
 
-	//Ruch pilki
-	if (pilka.getWruchu())
+	// Ball movement
+	if (ball.getMoving())
 	{
-		pilka.ustawPilke(	pilka.getPolozenie_x() + (pilka.getSzybkosc() / 1000) * sin(pilka.getKat()),
-							pilka.getPolozenie_y() + (pilka.getSzybkosc() / 1000) * cos(pilka.getKat())	);
+		ball.placeBall(	ball.getPositionX() + (ball.getSpeed() / 1000) * sin(ball.getAngle()),
+							ball.getPositionY() + (ball.getSpeed() / 1000) * cos(ball.getAngle())	);
 
-		//Wykrywanie kolizji
-		Kolizja();
+		// Collision check
+		collision();
 	}
 
-	// Usuniecie macierzy lezacej na  wierzcholku stosu (powrot do stanu
-	// sprzed wywolania funkcji)
+	// Remove the matrix at the top of the stack
+	// (return to the state before the function was called)
 	glPopMatrix();
 
-	// Przelaczenie buforow ramki
+	// Switch frame buffers
 	glutSwapBuffers();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Funkcja ustawiajaca parametry rzutu perspektywicznego i rozmiary viewportu
-void UstawParametryWidoku(int szerokosc, int wysokosc)
+// Set parameters of perspective projection and size of viewport
+void setViewParams(int width, int height)
 {
-	// Ustawienie parametrow viewportu
-	glViewport(0, 0, szerokosc, wysokosc);
+	// Set parameters of viewport
+	glViewport(0, 0, width, height);
 
-	// Przejscie w tryb modyfikacji macierzy rzutowania
+	// Enter mode of projction matrix modifying
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluPerspective(40.0, (float)szerokosc / (float)wysokosc, 1.0, 1000.0);
+	gluPerspective(40.0, (float)width / (float)height, 1.0, 1000.0);
 
-	// Przejscie w tryb modyfikacji macierzy przeksztalcen geometrycznych
+	// Enter mode of geometric transformations matrix modifying
 	glMatrixMode(GL_MODELVIEW);
 
-	// Zmiana macierzy znajdujacej sie na wierzcholku stosu na macierz jednostkowa 
+	// Change matrix a the top of the stack to unit matrix
 	glLoadIdentity();
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Funkcja klawiszy specjalnych
-void ObslugaKlawiszySpecjalnych(int klawisz, int x, int y)
+// Map special keyboard keys (arrows) to functions
+void mapSpecialKeys(int key, int x, int y)
 {
-	switch (klawisz)
+	switch (key)
 	{
 	case GLUT_KEY_UP:
-		paletka1.Start();
+		racket1.start();
 		break;
 
 	case GLUT_KEY_LEFT:
-		paletka1.Ruch_L();
+		racket1.moveLeft();
 		break;
 
 	case GLUT_KEY_RIGHT:
-		paletka1.Ruch_P();
+		racket1.moveRight();
 		break;
 	}
 }
 //////////////////////////////////////////////////////////////////////////////////////////
-// Funkcja obslugi klawiatury
-void ObslugaKlawiatury(unsigned char klawisz, int x, int y)
+// Map keyboard keys to functions
+void mapKeys(unsigned char key, int x, int y)
 {
-	switch (klawisz)
+	switch (key)
 	{
 	case 's':
-		paletka2.Start();
+		racket2.start();
 		break;
 
 	case 'a':
-		paletka2.Ruch_L();
+		racket2.moveLeft();
 		break;
 
 	case 'd':
-		paletka2.Ruch_P();
+		racket2.moveRight();
 		break;
 
 	case '+':
-		kamera.zoomplus();
+		camera.zoomPlus();
 		break;
 
 	case '-':
-		kamera.zoomminus();
+		camera.zoomMinus();
 		break;
 
 	case '7':
-		kamera.Yminus();
+		camera.yMinus();
 		break;
 
 	case '9':
-		kamera.Yplus();
+		camera.yPlus();
 		break;
 
 	case '8':
-		kamera.Xplus();
+		camera.xPlus();
 		break;
 
 	case '4':
-		kamera.Zplus();
+		camera.zPlus();
 		break;
 
 	case '6':
-		kamera.Zminus();
+		camera.zMinus();
 		break;
 
 	case '2':
-		kamera.Xminus();
+		camera.xMinus();
 		break;
 	}
 
-	if (klawisz == 27)//esc
+	if (key == 27) //ESC key
 		exit(0);
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////
-// Glowna funkcja programu
+// Main application function
 int  main(int argc, char **argv)
 {
-	// Zainicjowanie biblioteki GLUT
+	// Initialize GLUT library
 	glutInit(&argc, argv);
 
-	// Ustawienie trybu wyswietlania
+	// Set display mode
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
-	// Ustawienie polozenia dolenego lewego rogu okna
+	// Set position of left-bottom corner of the window
 	glutInitWindowPosition(100, 100);
 
-	// Ustawienie rozmiarow okna
+	// Set window size
 	glutInitWindowSize(800, 600);
 
-
 	////MENU
-	char wybor;
+	char select;
 
 menu:
 	while (1)
@@ -207,72 +206,72 @@ menu:
 		system("cls");
 		std::cout << "Pong v0.1a by Michal K" << std::endl << std::endl;
 		std::cout << "[1] Start" << std::endl;
-		std::cout << "[2] Opcje" << std::endl;
-		std::cout << "[3] Sterowanie" << std::endl;
-		std::cout << "[4] Wyjscie" << std::endl;
+		std::cout << "[2] Options" << std::endl;
+		std::cout << "[3] Controls" << std::endl;
+		std::cout << "[4] Exit" << std::endl;
 
-		wybor = _getch();
+		select = _getch();
 
-		switch (wybor)
+		switch (select)
 		{
 		case '1':
 			goto start;
 			break;
 		case '2':
-			//opcje
+			//options
 			while (1)
 			{
 				system("cls");
 				std::cout << "Pong v0.1a by Michal K" << std::endl << std::endl;
-				std::cout << "Opcje" << std::endl;
-				std::cout << "[1] Kolor tla: " << plansza.getKolorTla() << std::endl;
-				std::cout << "[2] Kolor planszy: " << plansza.getKolor() << std::endl;
-				std::cout << "[3] Kolor pilki: " << pilka.getKolor() << std::endl;
-				std::cout << "[4] Wielkosc pilki: " << pilka.getWielkosc() << std::endl;
-				std::cout << "[5] Szybkosc pilki: " << pilka.getPredkosc() << std::endl;
-				std::cout << "[6] Kolor paletki gracza 1: " << paletka1.getKolor() << std::endl;
-				std::cout << "[7] Szerokosc paletki gracza 1: " << paletka1.getSzerokosc() << std::endl;
-				std::cout << "[8] Kolor paletki gracza 2: " << paletka2.getKolor() << std::endl;
-				std::cout << "[9] Szerokosc paletki gracza 2: " << paletka2.getSzerokosc() << std::endl;
-				std::cout << "[0] Powrot" << std::endl;
+				std::cout << "Options" << std::endl;
+				std::cout << "[1] Background color: " << board.getBackgroundColor() << std::endl;
+				std::cout << "[2] Board color: " << board.getColor() << std::endl;
+				std::cout << "[3] Ball color: " << ball.getColor() << std::endl;
+				std::cout << "[4] Ball size: " << ball.getSizeName() << std::endl;
+				std::cout << "[5] Ball speed: " << ball.getSpeedName() << std::endl;
+				std::cout << "[6] Player 1's racket color: " << racket1.getColor() << std::endl;
+				std::cout << "[7] Player 1's racket width: " << racket1.getWidth() << std::endl;
+				std::cout << "[8] Player 2's racket color: " << racket2.getColor() << std::endl;
+				std::cout << "[9] Player 2's racket width: " << racket2.getWidth() << std::endl;
+				std::cout << "[0] Back" << std::endl;
 
-				wybor = _getch();
-				switch (wybor)
+				select = _getch();
+				switch (select)
 				{
 				case '1':
-					plansza.nastKolorTla();
+					board.nextBackgroundColor();
 					break;
 
 				case '2':
-					plansza.nastKolor();
+					board.nextColor();
 					break;
 
 				case '3':
-					pilka.nastKolor();
+					ball.nextColor();
 					break;
 
 				case '4':
-					pilka.nastWielkosc();
+					ball.nextSize();
 					break;
 
 				case '5':
-					pilka.nastPredkosc();
+					ball.nextSpeed();
 					break;
 
 				case '6':
-					paletka1.nastKolor();
+					racket1.nextColor();
 					break;
 
 				case '7':
-					paletka1.nastSzerokosc();
+					racket1.nextWidth();
 					break;
 
 				case '8':
-					paletka2.nastKolor();
+					racket2.nextColor();
 					break;
 
 				case '9':
-					paletka2.nastSzerokosc();
+					racket2.nextWidth();
 					break;
 
 				case '0':
@@ -282,14 +281,14 @@ menu:
 			}
 			break;
 		case '3':
-			//wyswietl sterowanie
+			//show controls
 			system("cls");
 			std::cout << "Pong v0.1a by Michal K" << std::endl << std::endl;
-			std::cout << "Sterowanie" << std::endl;
-			std::cout << "Gracz 1 - strzalki" << std::endl;
-			std::cout << "Gracz 2 - S, A, D" << std::endl;
-			std::cout << "Kamera - 4, 8, 6, 2, +, -, 7, 9" << std::endl;
-			std::cout << "ESC - wyjscie z gry" << std::endl;
+			std::cout << "Controls" << std::endl;
+			std::cout << "Player 1 - arrows" << std::endl;
+			std::cout << "Player 2 - S, A, D" << std::endl;
+			std::cout << "Camera - 4, 8, 6, 2, +, -, 7, 9" << std::endl;
+			std::cout << "ESC - exit game" << std::endl;
 			_getch();
 			break;
 		case '4':
@@ -302,42 +301,40 @@ menu:
 
 start:
 
-	// Utworzenie okna
+	// Create the window
 	glutCreateWindow("Pong");
 
-	// Odblokowanie bufora glebokosci
+	// Unlock depth buffer
 	glEnable(GL_DEPTH_TEST);
 
-	// Ustawienie funkcji wykonywanej na danych w buforze glebokosci
+	// Set function performed on depth buffer's data
 	glDepthFunc(GL_LEQUAL);
 
-	// Ustawienie wartosci czyszczacej zawartosc bufora glebokosci
+	// Set dept buffer clearing value
 	glClearDepth(1000.0);
 
-	// Ustawienie koloru czyszczenia bufora ramki - kolor tla
-	glClearColor(plansza.getKolorTla_R(), plansza.getKolorTla_G(), plansza.getKolorTla_B(), 0.0);
+	// Set frame buffer cleaning color - background color
+	glClearColor(board.getBackgroundColorR(), board.getBackgroundColorG(), board.getBackgroundColorB(), 0.0);
 
-	// Zarejestrowanie funkcji (callback) wyswietlajacej
-	glutDisplayFunc(WyswietlObraz);
+	// Register displaying function (callback)
+	glutDisplayFunc(showPicture);
 
-	// Zarejestrowanie funkcji (callback) wywolywanej za kazdym razem kiedy
-	// zmieniane sa rozmiary okna
-	glutReshapeFunc(UstawParametryWidoku);
+	// Register function for changing window size (callback)
+	glutReshapeFunc(setViewParams);
 
-	// Zarejestrowanie funkcji wykonywanej gdy okno nie obsluguje
-	// zadnych zadan
-	glutIdleFunc(WyswietlObraz);
+	// Register function for idle window
+	glutIdleFunc(showPicture);
 
-	// Zarejestrowanie funkcji obslugi klawiatury
-	glutKeyboardFunc(ObslugaKlawiatury);
+	// Register function for keyboard service
+	glutKeyboardFunc(mapKeys);
 
-	// Zarejestrowanie funkcji obslugi klawiszy specjalnych
-	glutSpecialFunc(ObslugaKlawiszySpecjalnych);
+	// Register function for keyboard service (special keys)
+	glutSpecialFunc(mapSpecialKeys);
 
-	pilka.ustawPilke(1);
+	ball.placeBall(1);
 
-	// Obsluga glownej petli programu (wywolywanie zarejestrowanych callbackow
-	// w odpowiedzi na odbierane zdarzenia lub obsluga stanu bezczynnosci)
+	// Main application loop service
+	// (callbacks for events and idle state)
 	glutMainLoop();
 
 	return 0;

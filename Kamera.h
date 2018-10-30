@@ -1,28 +1,27 @@
 #pragma once
-#define odlmin -10
-#define odlmax -150
+#define distMin -10
+#define distMax -150
 
-class Kamera
+class Camera
 {
 private:
-	float X;
-	float Y;
-	float Z;
+	float x;
+	float y;
+	float z;
 	float zoom;
 public:
-	Kamera(float X, float Y, float Z, float zoom);
+	Camera(float x, float y, float z, float zoom);
 	float getX();
 	float getY();
 	float getZ();
-	float getzoom();
-	void Xplus();
-	void Xminus();
-	void Yplus();
-	void Yminus();
-	void Zplus();
-	void Zminus();
-	void zoomplus();
-	void zoomminus();
-	~Kamera();
+	float getZoom();
+	void xPlus();
+	void xMinus();
+	void yPlus();
+	void yMinus();
+	void zPlus();
+	void zMinus();
+	void zoomPlus();
+	void zoomMinus();
+	~Camera();
 };
-

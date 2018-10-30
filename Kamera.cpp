@@ -1,77 +1,73 @@
 #include "Kamera.h"
 
-
-
-Kamera::Kamera(float X, float Y, float Z, float zoom)
+Camera::Camera(float x, float y, float z, float zoom)
 {
-	this->X = X;
-	this->Y = Y;
-	this->Z = Z;
-	this->zoom = zoom;
+	this -> x = x;
+	this -> y = y;
+	this -> z = z;
+	this -> zoom = zoom;
 }
 
-float Kamera::getX()
+float Camera::getX()
 {
-	return X;
+	return x;
 }
 
-float Kamera::getY()
+float Camera::getY()
 {
-	return Y;
+	return y;
 }
 
-float Kamera::getZ()
+float Camera::getZ()
 {
-	return Z;
+	return z;
 }
 
-float Kamera::getzoom()
+float Camera::getZoom()
 {
 	return zoom;
 }
 
-void Kamera::Xplus()
+void Camera::xPlus()
 {
-	X = X + 1.0;
+	x += 1.0;
 }
 
-void Kamera::Xminus()
+void Camera::xMinus()
 {
-	X = X - 1.0;
+	x -= 1.0;
 }
 
-void Kamera::Yplus()
+void Camera::yPlus()
 {
-	Y = Y + 1.0;
+	y += 1.0;
 }
 
-void Kamera::Yminus()
+void Camera::yMinus()
 {
-	Y = Y - 1.0;
+	y -= 1.0;
 }
 
-void Kamera::Zplus()
+void Camera::zPlus()
 {
-	Z = Z + 1.0;
+	z += 1.0;
 }
 
-void Kamera::Zminus()
+void Camera::zMinus()
 {
-	Z = Z - 1.0;
+	z -= 1.0;
 }
 
-void Kamera::zoomplus()
+void Camera::zoomPlus()
 {
-	if(zoom < odlmin)
-		zoom = zoom + 0.5;
+	if(zoom < distMin)
+		zoom += 0.5;
 }
 
-void Kamera::zoomminus()
+void Camera::zoomMinus()
 {
-	if(zoom > odlmax)
-		zoom = zoom - 0.5;
+	if(zoom > distMax)
+		zoom -= 0.5;
 }
 
-Kamera::~Kamera()
-{
-}
+Camera::~Camera(){}

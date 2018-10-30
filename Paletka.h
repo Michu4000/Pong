@@ -4,25 +4,24 @@
 #include "Pilka.h"
 #include <string>
 
-class Paletka : public Obiekt
+class Racket : public Object
 {
 private:
-	int gracz;
-	float szerokosc;
-	float polozenie_x;
-	float polozenie_y;
-	Plansza *plansza;
-	Pilka *pilka;
+	int player;
+	float width;
+	float positionX;
+	float positionY;
+	Board *board;
+	Ball *ball;
 public:
-	Paletka(int gracz, float szerokosc, float polozenie_x, float polozenie_y, float kolor_r, float kolor_g, float kolor_b, Plansza *plansza, Pilka *pilka);
-	void Rysuj();
-	void Ruch_L();
-	void Ruch_P();
-	void Start();
-	bool PosiadaniePilki();
-	std::string getSzerokosc();
-	void nastSzerokosc();
-	float getPolozenie_x();
-	~Paletka();
+	Racket(int player, float width, float positionX, float positionY, float colorR, float colorG, float colorB, Board *board, Ball *ball);
+	void paint();
+	void moveLeft();
+	void moveRight();
+	void start();
+	bool isHoldingBall();
+	std::string getWidth();
+	void nextWidth();
+	float getPositionX();
+	~Racket();
 };
-

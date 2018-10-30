@@ -1,154 +1,151 @@
 #include "Plansza.h"
 #include <glut.h>
 
-
-Plansza::Plansza(float szerokosc, float wysokosc, float kolor_r, float kolor_g, float kolor_b, float KolorTla_R, float KolorTla_G, float KolorTla_B) : Obiekt(kolor_r, kolor_g, kolor_b)
+Board::Board(float width, float height, float colorR, float colorG, float colorB, float backgroundColorR, float backgroundColorG, float backgroundColorB) : Object(colorR, colorG, colorB)
 {
-	this->szerokosc = szerokosc;
-	this->wysokosc = wysokosc;
-	this->KolorTla_R = KolorTla_R;
-	this->KolorTla_G = KolorTla_G;
-	this->KolorTla_B = KolorTla_B;
+	this -> width = width;
+	this -> height = height;
+	this -> backgroundColorR = backgroundColorR;
+	this -> backgroundColorG = backgroundColorG;
+	this -> backgroundColorB = backgroundColorB;
 }
 
-void Plansza::Rysuj()
+void Board::paint()
 {
-	glColor3f(kolor_r, kolor_g, kolor_b);
+	glColor3f(colorR, colorG, colorB);
 	glBegin(GL_LINE_LOOP);
-		glVertex3f(-szerokosc/2, wysokosc/2, 0.0);
-		glVertex3f(szerokosc/2, wysokosc/2, 0.0);
-		glVertex3f(szerokosc/2, -wysokosc/2, 0.0);
-		glVertex3f(-szerokosc/2, -wysokosc/2, 0.0);
+		glVertex3f(-width/2, height/2, 0.0);
+		glVertex3f(width/2, height/2, 0.0);
+		glVertex3f(width/2, -height/2, 0.0);
+		glVertex3f(-width/2, -height/2, 0.0);
 	glEnd();
 }
 
-float Plansza::getSzerokosc()
+float Board::getWidth()
 {
-	return szerokosc;
+	return width;
 }
 
-float Plansza::getWysokosc()
+float Board::getHeight()
 {
-	return wysokosc;
+	return height;
 }
 
-float Plansza::getKolorTla_R()
+float Board::getBackgroundColorR()
 {
-	return KolorTla_R;
+	return backgroundColorR;
 }
 
-float Plansza::getKolorTla_G()
+float Board::getBackgroundColorG()
 {
-	return KolorTla_G;
+	return backgroundColorG;
 }
 
-float Plansza::getKolorTla_B()
+float Board::getBackgroundColorB()
 {
-	return KolorTla_B;
+	return backgroundColorB;
 }
 
-std::string Plansza::getKolorTla()
+std::string Board::getBackgroundColor()
 {
-	if ((KolorTla_R < 1 && KolorTla_R > 0) || (KolorTla_G < 1 && KolorTla_G > 0) || (KolorTla_B < 1 && KolorTla_B > 0))
-	return "nieznany";
+	if ((backgroundColorR < 1 && backgroundColorR > 0) || (backgroundColorG < 1 && backgroundColorG > 0) || (backgroundColorB < 1 && backgroundColorB > 0))
+	return "unknow";
 
-	if (KolorTla_R == 1)
+	if (backgroundColorR == 1)
 	{
-		if (KolorTla_G == 1)
+		if (backgroundColorG == 1)
 		{
-			if (KolorTla_B == 1)
-				return "bialy";
-			else return "zolty";
+			if (backgroundColorB == 1)
+				return "white";
+			else return "yellow";
 		}
 		else
 		{
-			if (KolorTla_B == 1)
-				return "fioletowy";
-			else return "czerwony";
+			if (backgroundColorB == 1)
+				return "violet";
+			else return "red";
 		}
 	}
 	else
-		if (KolorTla_G == 1)
+		if (backgroundColorG == 1)
 		{
-			if (KolorTla_B == 1)
-				return "blekitny";
-			else return "zielony";
+			if (backgroundColorB == 1)
+				return "azure";
+			else return "green";
 		}
 		else
-			if (KolorTla_B == 1)
-				return "niebieski";
-			else return "czarny";
+			if (backgroundColorB == 1)
+				return "blue";
+			else return "black";
 }
 
-void Plansza::nastKolorTla()
+void Board::nextBackgroundColor()
 {
-	//nieznany, czarny, czerwony, zielony, niebieski, bialy, fioletowy, blekitny, zolty
-	if (getKolorTla() == "nieznany")
+	//unknow, black, red, green, blue, white, violet, azure, yellow
+	if (getBackgroundColor() == "unknow")
 	{
-		KolorTla_R = 0;
-		KolorTla_G = 0;
-		KolorTla_B = 0;
+		backgroundColorR = 0;
+		backgroundColorG = 0;
+		backgroundColorB = 0;
 		return;
 	}
 
-	if (getKolorTla() == "czarny")
+	if (getBackgroundColor() == "black")
 	{
-		KolorTla_R = 1;
-		KolorTla_G = 0;
-		KolorTla_B = 0;
+		backgroundColorR = 1;
+		backgroundColorG = 0;
+		backgroundColorB = 0;
 		return;
 	}
-	if (getKolorTla() == "czerwony")
+	if (getBackgroundColor() == "red")
 	{
-		KolorTla_R = 0;
-		KolorTla_G = 1;
-		KolorTla_B = 0;
+		backgroundColorR = 0;
+		backgroundColorG = 1;
+		backgroundColorB = 0;
 		return;
 	}
-	if (getKolorTla() == "zielony")
+	if (getBackgroundColor() == "green")
 	{
-		KolorTla_R = 0;
-		KolorTla_G = 0;
-		KolorTla_B = 1;
+		backgroundColorR = 0;
+		backgroundColorG = 0;
+		backgroundColorB = 1;
 		return;
 	}
-	if (getKolorTla() == "niebieski")
+	if (getBackgroundColor() == "blue")
 	{
-		KolorTla_R = 1;
-		KolorTla_G = 1;
-		KolorTla_B = 1;
+		backgroundColorR = 1;
+		backgroundColorG = 1;
+		backgroundColorB = 1;
 		return;
 	}
-	if (getKolorTla() == "bialy")
+	if (getBackgroundColor() == "white")
 	{
-		KolorTla_R = 1;
-		KolorTla_G = 0;
-		KolorTla_B = 1;
+		backgroundColorR = 1;
+		backgroundColorG = 0;
+		backgroundColorB = 1;
 		return;
 	}
-	if (getKolorTla() == "fioletowy")
+	if (getBackgroundColor() == "violet")
 	{
-		KolorTla_R = 0;
-		KolorTla_G = 1;
-		KolorTla_B = 1;
+		backgroundColorR = 0;
+		backgroundColorG = 1;
+		backgroundColorB = 1;
 		return;
 	}
-	if (getKolorTla() == "blekitny")
+	if (getBackgroundColor() == "azure")
 	{
-		KolorTla_R = 1;
-		KolorTla_G = 1;
-		KolorTla_B = 0;
+		backgroundColorR = 1;
+		backgroundColorG = 1;
+		backgroundColorB = 0;
 		return;
 	}
-	if (getKolorTla() == "zolty")
+	if (getBackgroundColor() == "yellow")
 	{
-		KolorTla_R = 0;
-		KolorTla_G = 0;
-		KolorTla_B = 0;
+		backgroundColorR = 0;
+		backgroundColorG = 0;
+		backgroundColorB = 0;
 		return;
 	}
 }
 
-Plansza::~Plansza()
-{
-}
+Board::~Board(){}

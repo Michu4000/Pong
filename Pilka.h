@@ -3,34 +3,32 @@
 #include "Obiekt.h"
 #include <string>
 
-class Pilka : public Obiekt
+class Ball : public Object
 {
 private:
-	float wielkosc;
-	float polozenie_x;
-	float polozenie_y;
-	float szybkosc;
-	bool wruchu;
-	float kat;
-	Plansza *plansza;
+	float size;
+	float positionX;
+	float positionY;
+	float speed;
+	bool isMoving;
+	float angle;
 public:
-	Pilka(float wielkosc, float szybkosc, float kolor_r, float kolor_g, float kolor_b, float polozenie_x, float polozenie_y, Plansza *plansza);
-	void Rysuj();
-	void Ruch(int gracz);
-	std::string getWielkosc();
-	void nastWielkosc();
-	float getPolozenie_x();
-	float getPolozenie_y();
-	float getSzybkosc();
-	void zmienSzybkosc(float szybkosc);
-	float getKat();
-	void zmienKat(float kat);
-	float getRozmiar();
-	void ustawPilke(int gracz);
-	void ustawPilke(float x, float y);
-	bool getWruchu();
-	void nastPredkosc();
-	std::string getPredkosc();
-	~Pilka();
+	Ball(float size, float speed, float clorR, float clorG, float clorB, float positionX, float positionY);
+	void paint();
+	void setMoving();
+	std::string getSizeName();
+	void nextSize();
+	float getPositionX();
+	float getPositionY();
+	float getSpeed();
+	void setSpeed(float speed);
+	float getAngle();
+	void setAngle(float angle);
+	float getSize();
+	void placeBall(int player);
+	void placeBall(float x, float y);
+	bool getMoving();
+	void nextSpeed();
+	std::string getSpeedName();
+	~Ball();
 };
-
