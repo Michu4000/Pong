@@ -3,10 +3,10 @@
 #include <glut.h>
 #include <math.h>
 
-#include "Plansza.h"
-#include "Pilka.h"
-#include "Paletka.h"
-#include "Kamera.h"
+#include "Board.h"
+#include "Ball.h"
+#include "Racket.h"
+#include "Camera.h"
 
 #define PI 3.141593
 
